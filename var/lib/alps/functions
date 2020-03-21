@@ -65,21 +65,21 @@ as_root()
 
 function makepkg()
 {
-        NAME="$1"
-        VERSION="$2"
-        OPTION="$3"
-        if [ $OPTION == "1" ]; then
-                if [ ! -d "/var/cache/alps/binaries" ]; then
-                        sudo mkdir -pv /var/cache/alps/binaries
-                        sudo chmod a+rw /var/cache/alps/binaries
-                fi
-                INSTALL_DIR=/var/cache/alps/binaries/$NAME-$VERSION-$(uname -m)
-                make DESTDIR=${INSTALL_DIR} install
-                pushd ${INSTALL_DIR}
-                tar -cJvf ${INSTALL_DIR}/../$NAME-$VERSION-$(uname -m).tar.xz *
-                popd
-                sudo rm -r ${INSTALL_DIR}
-
+        if [ ! -d "$BINARY_DIR" ]; then
+                sudo mkdir -pv $BINARY_DIR
+                sudo chmod a+rw $BINARY_DIR
         fi
+        INSTALL_DIR=$BINARY_DIR/$NAME-$VERSION-$(uname -m)
+        make DESTDIR=${INSTALL_DIR} install
+        pushd ${INSTALL_DIR}
+        tar -cJvf ../$NAME-$VERSION-$(uname -m).tar.xz *
+        popd
+        sudo rm -r ${INSTALL_DIR}
 }
 
+function installpkg()
+{
+	pushd $BINARY_DIR
+	tar -xf $NAME-$VERSION-$(uname -m).tar.xz -C /
+	popd
+}
