@@ -80,6 +80,6 @@ function makepkg()
 function installpkg()
 {
 	pushd $BINARY_DIR
-	tar -xf $NAME-$VERSION-$(uname -m).tar.xz -C /
+	sudo tar -xf $NAME-$VERSION-$(uname -m).tar.xz -C /
 	popd
 }
