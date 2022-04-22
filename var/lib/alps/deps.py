@@ -37,7 +37,7 @@ def all_deps(pkg_name, config):
 	optional = optional_deps(pkg_name, config)
 	required.extend(recommended)
 	required.extend(optional)
-	return required;
+	return required
 
 def required_and_recommended_deps(pkg_name, config):
 	required = required_deps(pkg_name, config)
@@ -68,7 +68,16 @@ def dep_chain(pkg_names, processed, include_optional, config):
 		dep_chain = dep_chain_individual(pkg_name, processed, include_optional, config)
 		for dep in dep_chain:
 			append_unique(big_dep_chain, dep)
-	return big_dep_chain
+	sorted = list()
+	for dep in big_dep_chain:
+		dep_index = big_dep_chain.index(dep)
+		deps = dep_chain_individual(dep, list(), False, config)
+		for individual_dep in deps:
+			individual_dep_index = big_dep_chain.index(individual_dep)
+			if individual_dep_index > dep_index:
+				sorted.append(individual_dep)
+		sorted.append(dep)
+	return sorted
 
 def load_installed(config):
 	with open(config['INSTALLED_LIST']) as f:
